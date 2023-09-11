@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Header from "../layout/Header/Header";
 import { useGetTreeMutation } from "../services/api";
 import TreeNode from "../components/treeNode/treeNode";
 
 function App() {
-  const [activeNode, setActiveNode] = useState(false);
-
   const [getTree, { data: treeRoot, isLoading: isLoadingTreeRoot }] =
     useGetTreeMutation();
-  // const [createNode, { data, isLoading }] = useCreateNewNodeMutation();
+
 
   useEffect(() => {
     getTree("GUID");
@@ -19,9 +17,6 @@ function App() {
     console.log(treeRoot);
   }, [treeRoot]);
 
-  const disableOptions = (viewOption: boolean) => {
-    setActiveNode(viewOption)
-  }
 
   return (
     <>
@@ -34,7 +29,6 @@ function App() {
               <TreeNode
                 key={rootNode.id}
                 node={rootNode}
-                activeNode={disableOptions}
               />
             ))}
           </div>

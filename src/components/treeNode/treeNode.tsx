@@ -4,10 +4,9 @@ import styles from "./treeNode.module.scss";
 
 interface IProps {
   node: ITree;
-  activeNode: (view: boolean) => void;
 }
 
-const TreeNode = ({ node, activeNode }: IProps) => {
+const TreeNode = ({ node }: IProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
@@ -54,7 +53,7 @@ const TreeNode = ({ node, activeNode }: IProps) => {
         <ul className="child-nodes">
           {node.children.map((childNode) => (
             <li key={childNode.id} className={styles.nodeContainer}>
-              <TreeNode node={childNode} activeNode={activeNode} />
+              <TreeNode node={childNode} />
             </li>
           ))}
         </ul>
