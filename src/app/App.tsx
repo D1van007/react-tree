@@ -1,24 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "../layout/Header/Header";
 import { useGetTreeMutation } from "../services/api";
 import TreeNode from "../components/treeNode/treeNode";
 
 function App() {
-  const [getTree, { data, isLoading }] = useGetTreeMutation();
+  const [activeNode, setActiveNode] = useState(false);
+
+  const [getTree, { data: treeRoot, isLoading: isLoadingTreeRoot }] =
+    useGetTreeMutation();
+  // const [createNode, { data, isLoading }] = useCreateNewNodeMutation();
 
   useEffect(() => {
     getTree("GUID");
-  }, []);
+    console.log(treeRoot);
+  }, [getTree]);
+
+  useEffect(() => {
+    console.log(treeRoot);
+  }, [treeRoot]);
+
+  const disableOptions = (viewOption: boolean) => {
+    setActiveNode(viewOption)
+  }
 
   return (
     <>
       <Header />
-      {isLoading && <h2>Loading...</h2>}
+      {isLoadingTreeRoot && <h2>Loading...</h2>}
       <main>
-        {data && (
+        {treeRoot && (
           <div>
-            {[data].map((rootNode) => (
-              <TreeNode key={rootNode.id} node={rootNode} />
+            {[treeRoot].map((rootNode) => (
+              <TreeNode
+                key={rootNode.id}
+                node={rootNode}
+                activeNode={disableOptions}
+              />
             ))}
           </div>
         )}

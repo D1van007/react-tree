@@ -3,3 +3,8 @@ export interface ITree {
     name: string;
     children: ITree[];
   }
+export interface INewNode{
+    treeName: string;
+    parentNodeId: string;
+    nodeName: string;
+  }
