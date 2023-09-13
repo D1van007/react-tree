@@ -3,8 +3,17 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { api } from "./../services/api";
 
+import openModalReducer from "./slices/openModalReducer";
+import modeModalReducer from "./slices/modeModalReducer";
+import treeRootReducer from "./slices/treeRootReducer";
+import nodeReducer from "./slices/nodeReducer";
+
 export const store = configureStore({
   reducer: {
+    treeRoot: treeRootReducer,
+    node: nodeReducer,
+    openModal: openModalReducer,
+    modeModal: modeModalReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>

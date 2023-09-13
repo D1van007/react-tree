@@ -1,17 +1,16 @@
 html {
   -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-  *,
-  *::before,
-  *::after {
-      -webkit-box-sizing: inherit;
-         -moz-box-sizing: inherit;
-              box-sizing: inherit;
-  }
-
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
 
 body {
   margin: 0 auto;
@@ -24,8 +23,9 @@ body {
 }
 
 #root {
- width: 100%;
- max-width: 1440px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 1440px;
 }
 
 .tree-node {
@@ -50,4 +50,3 @@ body {
 .child-nodes > li {
   margin: 5px 0;
 }
-

@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { ITree } from "../../types/types";
+import { useDispatch } from "react-redux";
+import { ITree, modeModaleEnum } from "../../types/types";
 import styles from "./treeNode.module.scss";
+import { setOpenModal } from "../../store/slices/openModalReducer";
+import { setModeModale } from "../../store/slices/modeModalReducer";
+import {
+  setNodeId,
+  setNodeName,
+  setParentNodeId,
+} from "../../store/slices/nodeReducer";
 
 interface IProps {
   node: ITree;
@@ -9,6 +17,10 @@ interface IProps {
 const TreeNode = ({ node }: IProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isActive, setIsActive] = useState(false);
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   const nodeRef = useRef<HTMLDivElement>(null);
 
@@ -29,8 +41,25 @@ const TreeNode = ({ node }: IProps) => {
     };
   }, [isActive]);
 
-  const handleToggle = () => {
-    setIsExpanded(!isExpanded);
+
+  const dispatch = useDispatch();
+
+  const handleClick = (mode: string) => {
+    dispatch(setOpenModal(true));
+    dispatch(setNodeId(node.id));
+    dispatch(setNodeName(node.name));
+
+    if (mode === modeModaleEnum.CREATE) {
+      dispatch(setParentNodeId(node.id));
+      dispatch(setModeModale(modeModaleEnum.CREATE));
+      dispatch(setNodeName(""));
+    }
+    if (mode === modeModaleEnum.RENAME) {
+      dispatch(setModeModale(modeModaleEnum.RENAME));
+    }
+    if (mode === modeModaleEnum.DELETE) {
+      dispatch(setModeModale(modeModaleEnum.DELETE));
+    }
   };
 
   return (
@@ -40,12 +69,38 @@ const TreeNode = ({ node }: IProps) => {
         className={`node-toggle ${isExpanded ? "expanded" : ""}`}
         ref={nodeRef}
       >
-        {isExpanded && node.children.length > 0 ? "📖" : "📂"} {node.name}
+        {isExpanded && node.children.length > 0
+          ? "📖"
+          : node.children.length > 0
+          ? "📚"
+          : "📕"}
+        {node.name}
         {isActive && (
-          <div className={styles.optionsContainer}>
-            <button>Create</button>
-            <button>Rename</button>
-            <button>Delete</button>
+          <div
+            className={styles.optionsContainer}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => {
+                handleClick(modeModaleEnum.CREATE);
+              }}
+            >
+              Create
+            </button>
+            <button
+              onClick={() => {
+                handleClick(modeModaleEnum.RENAME);
+              }}
+            >
+              Rename
+            </button>
+            <button
+              onClick={() => {
+                handleClick(modeModaleEnum.DELETE);
+              }}
+            >
+              Delete
+            </button>
           </div>
         )}
       </div>
