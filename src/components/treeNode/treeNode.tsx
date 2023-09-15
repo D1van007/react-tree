@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ITree, modeModaleEnum } from "../../types/types";
 import styles from "./treeNode.module.scss";
 import { setOpenModal } from "../../store/slices/openModalReducer";
@@ -9,16 +9,41 @@ import {
   setNodeName,
   setParentNodeId,
 } from "../../store/slices/nodeReducer";
+import {
+  addExpandedFolder,
+  deleteExpandedFolder,
+} from "../../store/slices/expandedFoldersReducer";
+import { RootState } from "../../store/store";
 
 interface IProps {
   node: ITree;
 }
 
 const TreeNode = ({ node }: IProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const expandedFolderId: string[] = useSelector(
+    (state) => (state as RootState).expandedFolders
+  );
+
+  const isExpandedNode = expandedFolderId.includes(node.id);
+
+  const [isExpanded, setIsExpanded] = useState(isExpandedNode);
   const [isActive, setIsActive] = useState(false);
 
   const handleToggle = () => {
+    if (!isExpanded) {
+      dispatch(addExpandedFolder(node.id));
+    }
+    if (isExpanded) {
+        dispatch(deleteExpandedFolder(node.id))
+      const recursiveTraversalNode = (node: ITree[]) => {
+        node.map((child) => {
+          dispatch(deleteExpandedFolder(child.id));
+          child.children.length && recursiveTraversalNode(child.children);
+        });
+      };
+      recursiveTraversalNode([node]);
+    }
+
     setIsExpanded(!isExpanded);
   };
 
@@ -41,6 +66,7 @@ const TreeNode = ({ node }: IProps) => {
     };
   }, [isActive]);
 
+  useEffect(() => {}, [node]);
 
   const dispatch = useDispatch();
 
@@ -81,7 +107,8 @@ const TreeNode = ({ node }: IProps) => {
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 handleClick(modeModaleEnum.CREATE);
               }}
             >

@@ -1,6 +1,7 @@
 export interface ITree {
   id: string;
   name: string;
+  expanded?: boolean;
   children: ITree[];
 }
 export interface INewNode {

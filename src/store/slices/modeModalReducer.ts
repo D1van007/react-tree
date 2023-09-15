@@ -1,15 +1,14 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from "@reduxjs/toolkit";
-import { modeModaleEnum } from "../../types/types";
 
 export interface IModeModale {
-  modeModale: modeModaleEnum;
+  modeModale: "delete" | "create" | "rename";
 }
 
 const modeModaleSlice = createSlice({
   name: "modeModal",
-  initialState: {
-    modeModale: "",
+  initialState: <IModeModale>{
+    modeModale: "create",
   },
   reducers: {
     setModeModale(state, action) {

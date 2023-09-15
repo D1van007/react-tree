@@ -10,16 +10,14 @@ import { treeName } from "../constants/names";
 import { INode, modeModaleEnum } from "../types/types";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { setOpenModal } from "../store/slices/openModalReducer";
 import LinearProgress from "@mui/material/LinearProgress";
-import { setTreeRoot } from "../store/slices/treeRootReducer";
 import { ModalChildren } from "../components/ui/modalChildren/modalChildren";
 import { setNewNodeName, setNodeName } from "../store/slices/nodeReducer";
 
 function App() {
-  
   const [getTree, { data: treeRoot, isLoading: isLoadingTreeRoot }] =
     useGetTreeMutation();
 
@@ -32,12 +30,11 @@ function App() {
   const [renameNode, { isLoading: isLoadingRenameNode }] =
     useRenameNodeMutation();
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    getTree(treeName);
+  }, [getTree]);
 
-  const treeRootState = useSelector(
-    (state) => (state as RootState).treeRoot.treeRoot,
-    shallowEqual
-  );
+  const dispatch = useDispatch();
 
   const parentNodeId = useSelector(
     (state) => (state as RootState).node.parentNodeId
@@ -50,6 +47,11 @@ function App() {
   const newNodeNameState = useSelector(
     (state) => (state as RootState).node.newNodeName
   );
+
+  const modeModale = useSelector(
+    (state) => (state as RootState).modeModal.modeModale
+  );
+
   const nodeIdState = useSelector((state) => (state as RootState).node.nodeId);
 
   const currentNode: INode = {
@@ -59,19 +61,6 @@ function App() {
     nodeName: nodeNameState,
     newNodeName: newNodeNameState,
   };
-
-  dispatch(setTreeRoot(treeRoot));
-
-  useEffect(() => {
-    getTree(treeName)
-      .unwrap()
-      .then((data) => {
-        dispatch(setTreeRoot(data));
-      })
-      .then(() => {});
-
-    // getTree(treeName);
-  }, []);
 
   const modalCallback = () => {
     if (modeModale === modeModaleEnum.CREATE) {
@@ -92,56 +81,38 @@ function App() {
     onCloseModal();
   };
 
-  const isOpen: boolean = useSelector(
+  const isOpenModal: boolean = useSelector(
     (state) => (state as RootState).openModal.isOpenModal
   );
 
   const onCloseModal = () => {
     dispatch(setOpenModal(false));
     dispatch(setNodeName(""));
-    dispatch(setNewNodeName(""))
+    dispatch(setNewNodeName(""));
   };
-
-  const modeModale = useSelector(
-    (state) => (state as RootState).modeModal.modeModale
-  );
-
-  if (
-    isLoadingTreeRoot ||
-    isLoadingCreateNode ||
-    isLoadingDeleteNode ||
-    isLoadingRenameNode
-  ) {
-    return <LinearProgress />;
-  }
 
   return (
     <main>
-      {isOpen && (
-        <div>
-          <Modal open={isOpen} onClose={onCloseModal} center>
-            <ModalChildren
-              callback={modalCallback}
-              mode={modeModale}
-              closeModal={onCloseModal}
-            />
-          </Modal>
-        </div>
-      )}
-      {treeRootState && (
-        <div>
-          {[treeRootState].map((rootNode) => (
-            <TreeNode key={rootNode.id} node={rootNode} />
-          ))}
-        </div>
-      )}
-      {/* {treeRoot && (
+      {(isLoadingTreeRoot ||
+        isLoadingCreateNode ||
+        isLoadingDeleteNode ||
+        isLoadingRenameNode) && <LinearProgress />}
+      {treeRoot && (
         <div>
           {[treeRoot].map((rootNode) => (
             <TreeNode key={rootNode.id} node={rootNode} />
           ))}
         </div>
-      )} */}
+      )}
+      {isOpenModal && (
+        <Modal open={isOpenModal} onClose={onCloseModal} center>
+          <ModalChildren
+            callback={modalCallback}
+            mode={modeModale}
+            closeModal={onCloseModal}
+          />
+        </Modal>
+      )}
     </main>
   );
 }

@@ -5,15 +5,15 @@ import { api } from "./../services/api";
 
 import openModalReducer from "./slices/openModalReducer";
 import modeModalReducer from "./slices/modeModalReducer";
-import treeRootReducer from "./slices/treeRootReducer";
 import nodeReducer from "./slices/nodeReducer";
+import expandedFoldersReducer from "./slices/expandedFoldersReducer";
 
 export const store = configureStore({
   reducer: {
-    treeRoot: treeRootReducer,
     node: nodeReducer,
     openModal: openModalReducer,
     modeModal: modeModalReducer,
+    expandedFolders: expandedFoldersReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
