@@ -16,6 +16,7 @@ import { setOpenModal } from "../store/slices/openModalReducer";
 import LinearProgress from "@mui/material/LinearProgress";
 import { ModalChildren } from "../components/ui/modalChildren/modalChildren";
 import { setNewNodeName, setNodeName } from "../store/slices/nodeReducer";
+import styles from "./App.module.scss";
 
 function App() {
   const [getTree, { data: treeRoot, isLoading: isLoadingTreeRoot }] =
@@ -88,7 +89,7 @@ function App() {
   const onCloseModal = () => {
     dispatch(setOpenModal(false));
     dispatch(setNodeName(""));
-    dispatch(setNewNodeName(""));
+    dispatch(setNewNodeName(undefined));
   };
 
   return (
@@ -96,7 +97,7 @@ function App() {
       {(isLoadingTreeRoot ||
         isLoadingCreateNode ||
         isLoadingDeleteNode ||
-        isLoadingRenameNode) && <LinearProgress />}
+        isLoadingRenameNode) && <LinearProgress className={styles.linear} />}
       {treeRoot && (
         <div>
           {[treeRoot].map((rootNode) => (
@@ -105,7 +106,15 @@ function App() {
         </div>
       )}
       {isOpenModal && (
-        <Modal open={isOpenModal} onClose={onCloseModal} center>
+        <Modal
+          open={isOpenModal}
+          onClose={onCloseModal}
+          classNames={{
+            overlay: `${styles.customOverlay}`,
+            modal: `${styles.customModal}`,
+          }}
+          center
+        >
           <ModalChildren
             callback={modalCallback}
             mode={modeModale}

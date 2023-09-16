@@ -2,9 +2,11 @@ import { modeModaleEnum } from "../../../types/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { setNewNodeName, setNodeName } from "../../../store/slices/nodeReducer";
+import { Button, ButtonSize } from "../button/Button";
+import styles from "./modalChildren.module.scss";
 
 interface IModalChildren {
-  mode: "delete" | "create" | "rename" ;
+  mode: "delete" | "create" | "rename";
   callback: () => void;
   closeModal: () => void;
 }
@@ -24,39 +26,54 @@ export const ModalChildren = ({
   );
 
   const inputValue =
-    mode === modeModaleEnum.RENAME && newNodeNameState
-      ? newNodeNameState
-      : nodeNameState;
+    mode === modeModaleEnum.RENAME && newNodeNameState === undefined
+      ? nodeNameState
+      : newNodeNameState;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    mode === modeModaleEnum.CREATE &&
+      dispatch(setNodeName(e.currentTarget.value));
+    mode === modeModaleEnum.RENAME &&
+      dispatch(setNewNodeName(e.currentTarget.value));
+  };
+
+  const handleClickCancel = () => {
+    closeModal();
+  };
+  const handleClickModify = () => {
+    callback();
+    dispatch(setNodeName(""));
+    dispatch(setNewNodeName(undefined));
+  };
 
   return (
     <>
-      <h2> {mode.toLocaleUpperCase()}</h2>
-      {mode !== modeModaleEnum.DELETE && (
-        <input
-          type="text"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            mode === modeModaleEnum.CREATE &&
-              dispatch(setNodeName(e.currentTarget.value));
-            mode === modeModaleEnum.RENAME &&
-              dispatch(setNewNodeName(e.currentTarget.value));
-          }}
-          value={inputValue}
-        />
-      )}
-      {mode === modeModaleEnum.DELETE && (
-        <p>Do you wont delete "{nodeNameState}"</p>
-      )}
-
-      <button
-        onClick={() => {
-          callback();
-          dispatch(setNodeName(""));
-          dispatch(setNewNodeName(""));
-        }}
-      >
-        {mode.toLocaleUpperCase()}
-      </button>
-      <button onClick={closeModal}>CANCEL</button>
+      <h3 className={styles.title}> {mode}</h3>
+      <div className={styles.content}>
+        {mode !== modeModaleEnum.DELETE ? (
+          <>
+            <label htmlFor="modal-input" className={newNodeNameState && styles.labelActive}>
+              {mode === modeModaleEnum.CREATE ? " Name Node" : "New Node Name"}
+            </label>
+            <input
+              id="modal-input"
+              type="text"
+              onChange={handleChange}
+              value={inputValue}
+            />
+          </>
+        ) : (
+          <p>Do you wont delete "{nodeNameState}"?</p>
+        )}
+      </div>
+      <div className={styles.containerBtn}>
+        <Button onClick={handleClickCancel} size={ButtonSize.SMALL}>
+          CANCEL
+        </Button>
+        <Button mode={mode} onClick={handleClickModify} size={ButtonSize.SMALL}>
+          {mode.toLocaleUpperCase()}
+        </Button>
+      </div>
     </>
   );
 };

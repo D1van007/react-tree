@@ -4,10 +4,6 @@ import { ButtonHTMLAttributes, FC } from 'react'
 import cls from './Button.module.scss'
 import { classNames } from '../../../libs/classNames/classNames'
 
-export enum ButtonTheme {
-  CLEAR = 'clear',
-  FILLED = 'filled',
-}
 
 export enum ButtonSize {
   SMALL = 'small',
@@ -18,7 +14,7 @@ export enum ButtonSize {
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
-  theme?: ButtonTheme
+  mode?: "delete" | "create" | "rename" | "cancel"
   size?: ButtonSize
 }
 
@@ -26,14 +22,14 @@ export const Button: FC<ButtonProps> = props => {
   const {
     className,
     children,
-    theme = ButtonTheme.FILLED,
+    mode = "cancel",
     size = ButtonSize.MIDDLE,
     ...otherProps
   } = props
 
   return (
     <button
-      className={classNames(cls.Button, {}, [className ? className : '', cls[theme], cls[size]])}
+      className={classNames(cls.Button, {}, [className ? className : '', cls[mode], cls[size]])}
       {...otherProps}
     >
       {children}

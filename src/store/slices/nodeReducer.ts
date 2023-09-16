@@ -1,22 +1,15 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from "@reduxjs/toolkit";
-
-export interface INode {
-  treeName: string;
-  nodeId?: string;
-  parentNodeId?: string;
-  nodeName?: string;
-  newNodeName?: string;
-}
+import { INode } from "../../types/types";
 
 const nodeSlice = createSlice({
   name: "node",
-  initialState: {
+  initialState:<INode> {
     treeName: "GUID",
     nodeId: "",
     parentNodeId: "",
     nodeName: "",
-    newNodeName: "",
+    newNodeName: undefined,
   },
   reducers: {
     setNodeId(state, action) {

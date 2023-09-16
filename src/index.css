@@ -9,7 +9,7 @@ html {
 *::after {
   -webkit-box-sizing: inherit;
   -moz-box-sizing: inherit;
-  box-sizing: inherit;
+  box-sizing: inhiter;
 }
 
 body {
@@ -26,27 +26,4 @@ body {
   padding: 2rem;
   width: 100%;
   max-width: 1440px;
-}
-
-.tree-node {
-  margin-left: 20px;
-  border-left: 1px dashed #aaa;
-  padding-left: 8px;
-  position: relative;
-}
-
-.node-toggle {
-  display: flex;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.child-nodes {
-  margin-left: 20px;
-  list-style: none;
-  padding-left: 8px;
-}
-
-.child-nodes > li {
-  margin: 5px 0;
 }

@@ -14,7 +14,7 @@ export interface INode {
   nodeId?: string | null;
   parentNodeId?: string | null;
   nodeName?: string;
-  newNodeName?: string;
+  newNodeName?: string | undefined;
 }
 
 export enum modeModaleEnum {

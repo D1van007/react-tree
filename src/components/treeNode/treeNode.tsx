@@ -14,6 +14,12 @@ import {
   deleteExpandedFolder,
 } from "../../store/slices/expandedFoldersReducer";
 import { RootState } from "../../store/store";
+import addIcon from "../../assets/icon/add-button.png";
+import editIcon from "../../assets/icon/edit-button.png";
+import deleteIcon from "../../assets/icon/delete-button.png";
+import foldersIcon from "../../assets/icon/folders.png";
+import openFolder from "../../assets/icon/open-folder.png";
+import folderIcon from "../../assets/icon/folder.png";
 
 interface IProps {
   node: ITree;
@@ -34,7 +40,7 @@ const TreeNode = ({ node }: IProps) => {
       dispatch(addExpandedFolder(node.id));
     }
     if (isExpanded) {
-        dispatch(deleteExpandedFolder(node.id))
+      dispatch(deleteExpandedFolder(node.id));
       const recursiveTraversalNode = (node: ITree[]) => {
         node.map((child) => {
           dispatch(deleteExpandedFolder(child.id));
@@ -89,50 +95,49 @@ const TreeNode = ({ node }: IProps) => {
   };
 
   return (
-    <div className="tree-node">
-      <div
-        onClick={handleToggle}
-        className={`node-toggle ${isExpanded ? "expanded" : ""}`}
-        ref={nodeRef}
-      >
+    <div className={styles.treeNode}>
+      <div onClick={handleToggle} className={styles.nodeToggle} ref={nodeRef}>
         {isExpanded && node.children.length > 0
-          ? "📖"
+          ? <img className={styles.iconNode} src={openFolder} alt="icon open folder" />
           : node.children.length > 0
-          ? "📚"
-          : "📕"}
+          ? <img className={styles.iconNode} src={foldersIcon} alt="icon add" />
+          : <img className={styles.iconNode} src={folderIcon} alt="icon add" />
+          }
         {node.name}
         {isActive && (
-          <div
-            className={styles.optionsContainer}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
+          <div className={styles.optionsContainer}>
+            <div
+              className={styles.optionsBtn}
               onClick={(e) => {
                 e.stopPropagation();
                 handleClick(modeModaleEnum.CREATE);
               }}
             >
-              Create
-            </button>
-            <button
-              onClick={() => {
+              <img className={styles.iconBtn} src={addIcon} alt="icon add" />
+            </div>
+            <div
+              className={styles.optionsBtn}
+              onClick={(e) => {
+                e.stopPropagation();
                 handleClick(modeModaleEnum.RENAME);
               }}
             >
-              Rename
-            </button>
-            <button
-              onClick={() => {
+              <img className={styles.iconBtn} src={editIcon} alt="icon edit" />
+            </div>
+            <div
+              className={styles.optionsBtn}
+              onClick={(e) => {
+                e.stopPropagation();
                 handleClick(modeModaleEnum.DELETE);
               }}
             >
-              Delete
-            </button>
+              <img className={styles.iconBtn} src={deleteIcon} alt="icon delete" />
+            </div>
           </div>
         )}
       </div>
       {isExpanded && (
-        <ul className="child-nodes">
+        <ul className={styles.childNodes}>
           {node.children.map((childNode) => (
             <li key={childNode.id} className={styles.nodeContainer}>
               <TreeNode node={childNode} />
