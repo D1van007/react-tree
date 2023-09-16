@@ -2,13 +2,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface IModeModale {
-  modeModale: "delete" | "create" | "rename";
+  modeModale: "delete" | "create" | "rename" | "default";
 }
 
 const modeModaleSlice = createSlice({
   name: "modeModal",
   initialState: <IModeModale>{
-    modeModale: "create",
+    modeModale: "default",
   },
   reducers: {
     setModeModale(state, action) {

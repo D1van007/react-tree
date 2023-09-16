@@ -14,7 +14,7 @@ export enum ButtonSize {
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
-  mode?: "delete" | "create" | "rename" | "cancel"
+  mode?: "delete" | "create" | "rename" | "cancel" | "default"
   size?: ButtonSize
 }
 

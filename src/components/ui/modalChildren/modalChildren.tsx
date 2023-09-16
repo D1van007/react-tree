@@ -6,7 +6,7 @@ import { Button, ButtonSize } from "../button/Button";
 import styles from "./modalChildren.module.scss";
 
 interface IModalChildren {
-  mode: "delete" | "create" | "rename";
+  mode: "delete" | "create" | "rename" | "default";
   callback: () => void;
   closeModal: () => void;
 }

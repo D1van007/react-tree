@@ -22,3 +22,17 @@ export enum modeModaleEnum {
   CREATE = "create",
   RENAME = "rename",
 }
+
+export type ErrorDataType = {
+  error: string;
+  errorObject: object;
+  type: string;
+  id: string;
+  data: {
+    message: string;
+  }
+};
+export type CustomerError = {
+  data: ErrorDataType;
+  status: number;
+};
