@@ -1,9 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from "@reduxjs/toolkit";
-
-export interface IModeModale {
-  modeModale: "delete" | "create" | "rename" | "default";
-}
+import { IModeModale } from "../../types/types";
 
 const modeModaleSlice = createSlice({
   name: "modeModal",

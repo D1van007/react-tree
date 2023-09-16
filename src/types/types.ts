@@ -22,7 +22,9 @@ export enum modeModaleEnum {
   CREATE = "create",
   RENAME = "rename",
 }
-
+export interface IModeModale {
+  modeModale: "delete" | "create" | "rename" | "default";
+}
 export type ErrorDataType = {
   error: string;
   errorObject: object;

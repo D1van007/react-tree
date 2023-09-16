@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ITree, modeModaleEnum } from "../../types/types";
 import styles from "./treeNode.module.scss";
@@ -28,6 +28,9 @@ interface IProps {
 const TreeNode = ({ node }: IProps) => {
   const expandedFolderId: string[] = useSelector(
     (state) => (state as RootState).expandedFolders
+  );
+  const treeState = useSelector(
+    (state) => (state as RootState).tree
   );
 
   const isExpandedNode = expandedFolderId.includes(node.id);
@@ -76,7 +79,8 @@ const TreeNode = ({ node }: IProps) => {
 
   const dispatch = useDispatch();
 
-  const handleClick = (mode: string) => {
+  const handleClick = (e: SyntheticEvent, mode: string) => {
+    e.stopPropagation();
     dispatch(setOpenModal(true));
     dispatch(setNodeId(node.id));
     dispatch(setNodeName(node.name));
@@ -97,42 +101,58 @@ const TreeNode = ({ node }: IProps) => {
   return (
     <div className={styles.treeNode}>
       <div onClick={handleToggle} className={styles.nodeToggle} ref={nodeRef}>
-        {isExpanded && node.children.length > 0
-          ? <img className={styles.iconNode} src={openFolder} alt="icon open folder" />
-          : node.children.length > 0
-          ? <img className={styles.iconNode} src={foldersIcon} alt="icon add" />
-          : <img className={styles.iconNode} src={folderIcon} alt="icon add" />
-          }
+        {isExpanded && node.children.length > 0 ? (
+          <img
+            className={styles.iconNode}
+            src={openFolder}
+            alt="icon open folder"
+          />
+        ) : node.children.length > 0 ? (
+          <img className={styles.iconNode} src={foldersIcon} alt="icon add" />
+        ) : (
+          <img className={styles.iconNode} src={folderIcon} alt="icon add" />
+        )}
         {node.name}
         {isActive && (
           <div className={styles.optionsContainer}>
             <div
               className={styles.optionsBtn}
               onClick={(e) => {
-                e.stopPropagation();
-                handleClick(modeModaleEnum.CREATE);
+                handleClick(e, modeModaleEnum.CREATE);
               }}
             >
               <img className={styles.iconBtn} src={addIcon} alt="icon add" />
             </div>
-            <div
-              className={styles.optionsBtn}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClick(modeModaleEnum.RENAME);
-              }}
-            >
-              <img className={styles.iconBtn} src={editIcon} alt="icon edit" />
-            </div>
-            <div
-              className={styles.optionsBtn}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClick(modeModaleEnum.DELETE);
-              }}
-            >
-              <img className={styles.iconBtn} src={deleteIcon} alt="icon delete" />
-            </div>
+            {
+              (+node.id !== +treeState.tree.id && (
+                <>
+                  <div
+                    className={styles.optionsBtn}
+                    onClick={(e) => {
+                      handleClick(e, modeModaleEnum.RENAME);
+                    }}
+                  >
+                    <img
+                      className={styles.iconBtn}
+                      src={editIcon}
+                      alt="icon edit"
+                    />
+                  </div>
+                  <div
+                    className={styles.optionsBtn}
+                    onClick={(e) => {
+                      handleClick(e, modeModaleEnum.DELETE);
+                    }}
+                  >
+                    <img
+                      className={styles.iconBtn}
+                      src={deleteIcon}
+                      alt="icon delete"
+                    />
+                  </div>
+                </>
+              ))
+            }
           </div>
         )}
       </div>

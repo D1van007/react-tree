@@ -7,9 +7,11 @@ import openModalReducer from "./slices/openModalReducer";
 import modeModalReducer from "./slices/modeModalReducer";
 import nodeReducer from "./slices/nodeReducer";
 import expandedFoldersReducer from "./slices/expandedFoldersReducer";
+import treeReducer from "./slices/treeReducer";
 
 export const store = configureStore({
   reducer: {
+    tree: treeReducer,
     node: nodeReducer,
     openModal: openModalReducer,
     modeModal: modeModalReducer,

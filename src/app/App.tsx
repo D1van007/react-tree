@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import {
   useCreateNodeMutation,
@@ -17,6 +18,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { ModalChildren } from "../components/ui/modalChildren/modalChildren";
 import { setNewNodeName, setNodeName } from "../store/slices/nodeReducer";
 import styles from "./App.module.scss";
+import { setTree } from "../store/slices/treeReducer";
 
 function App() {
   const dispatch = useDispatch();
@@ -56,7 +58,9 @@ function App() {
   const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getTree(treeName);
+    getTree(treeName)
+      .unwrap()
+      .then((data) => dispatch(setTree(data)));
 
     const onClick = (e: MouseEvent) => {
       if (!mainRef.current) return;
@@ -154,7 +158,7 @@ function App() {
         isLoadingCreateNode ||
         isLoadingDeleteNode ||
         isLoadingRenameNode) && <LinearProgress className={styles.linear} />}
-        
+
       {treeRoot && (
         <div>
           {[treeRoot].map((rootNode) => (
