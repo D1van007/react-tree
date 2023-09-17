@@ -1,14 +1,9 @@
 export interface ITree {
   id: string;
   name: string;
-  expanded?: boolean;
   children: ITree[];
 }
-export interface INewNode {
-  treeName: string;
-  parentNodeId: string | null;
-  nodeName: string;
-}
+
 export interface INode {
   treeName: string;
   nodeId?: string | null;
@@ -21,7 +16,7 @@ export enum modeModaleEnum {
   DELETE = "delete",
   CREATE = "create",
   RENAME = "rename",
-  DEFAULY = "default",
+  DEFAULT = "default",
 }
 export interface IModeModale {
   modeModale: "delete" | "create" | "rename" | "default";

@@ -1,5 +1,4 @@
 import { CustomerError, modeModaleEnum } from "../../types/types";
-// import styles from "./modalError.module.scss";
 
 interface IModalError {
   mode: "delete" | "create" | "rename" | "default";
