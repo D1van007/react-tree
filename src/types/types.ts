@@ -21,6 +21,7 @@ export enum modeModaleEnum {
   DELETE = "delete",
   CREATE = "create",
   RENAME = "rename",
+  DEFAULY = "default",
 }
 export interface IModeModale {
   modeModale: "delete" | "create" | "rename" | "default";

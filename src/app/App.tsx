@@ -15,44 +15,32 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { setOpenModal } from "../store/slices/openModalReducer";
 import LinearProgress from "@mui/material/LinearProgress";
-import { ModalChildren } from "../components/ui/modalChildren/modalChildren";
 import { setNewNodeName, setNodeName } from "../store/slices/nodeReducer";
 import styles from "./App.module.scss";
 import { setTree } from "../store/slices/treeReducer";
+import { ModalModify } from "../components/modalModify/ModalModify";
+import { ModalError } from "../components/modalError/ModalError";
 
 function App() {
+  const [isModalError, setIsModalError] = useState(false);
   const dispatch = useDispatch();
 
-  const [
-    getTree,
-    { data: treeRoot, isLoading: isLoadingTreeRoot, isError, error },
-  ] = useGetTreeMutation();
+  const [getTree, { data: treeRoot, isLoading: isLoadingTreeRoot, error }] =
+    useGetTreeMutation();
 
   const [
     createNode,
-    {
-      isLoading: isLoadingCreateNode,
-      isError: isErrorCreateNode,
-      error: errorCreateNode,
-    },
+    { isLoading: isLoadingCreateNode, error: errorCreateNode },
   ] = useCreateNodeMutation();
 
   const [
     deleteNode,
-    {
-      isLoading: isLoadingDeleteNode,
-      isError: isErrorDeleteNode,
-      error: errorDeleteNode,
-    },
+    { isLoading: isLoadingDeleteNode, error: errorDeleteNode },
   ] = useDeleteNodeMutation();
 
   const [
     renameNode,
-    {
-      isLoading: isLoadingRenameNode,
-      isError: isErrorRenameNode,
-      error: errorRenameNode,
-    },
+    { isLoading: isLoadingRenameNode, error: errorRenameNode },
   ] = useRenameNodeMutation();
 
   const mainRef = useRef<HTMLDivElement>(null);
@@ -60,7 +48,11 @@ function App() {
   useEffect(() => {
     getTree(treeName)
       .unwrap()
-      .then((data) => dispatch(setTree(data)));
+      .then((data) => dispatch(setTree(data)))
+      .catch((e) => {
+        console.log(e);
+        setIsModalError(true);
+      });
 
     const onClick = (e: MouseEvent) => {
       if (!mainRef.current) return;
@@ -83,21 +75,15 @@ function App() {
     (state) => (state as RootState).node.newNodeName
   );
 
-  const modeModale = useSelector(
-    (state) => (state as RootState).modeModal.modeModale
-  );
-
   const isOpenModal: boolean = useSelector(
     (state) => (state as RootState).openModal.isOpenModal
   );
 
-  const mode: string = useSelector(
+  const mode: "delete" | "create" | "rename" | "default" = useSelector(
     (state) => (state as RootState).modeModal.modeModale
   );
 
   const nodeIdState = useSelector((state) => (state as RootState).node.nodeId);
-
-  const [isModalError, setIsModalError] = useState(false);
 
   const currentNode: INode = {
     treeName: treeName,
@@ -108,27 +94,30 @@ function App() {
   };
 
   const modalCallback = () => {
-    if (modeModale === modeModaleEnum.CREATE) {
+    if (mode === modeModaleEnum.CREATE) {
       createNode(currentNode)
         .unwrap()
         .then(() => getTree(treeName))
         .catch((e) => {
+          setIsModalError(true);
           console.log(e);
         });
     }
-    if (modeModale === modeModaleEnum.DELETE) {
+    if (mode === modeModaleEnum.DELETE) {
       deleteNode(currentNode)
         .unwrap()
         .then(() => getTree(treeName))
         .catch((e) => {
+          setIsModalError(true);
           console.log(e);
         });
     }
-    if (modeModale === modeModaleEnum.RENAME) {
+    if (mode === modeModaleEnum.RENAME) {
       renameNode(currentNode)
         .unwrap()
         .then(() => getTree(treeName))
         .catch((e) => {
+          setIsModalError(true);
           console.log(e);
         });
     }
@@ -140,17 +129,6 @@ function App() {
     dispatch(setNodeName(""));
     dispatch(setNewNodeName(undefined));
   };
-
-  useEffect(() => {
-    if (
-      isError ||
-      isErrorCreateNode ||
-      isErrorDeleteNode ||
-      isErrorRenameNode
-    ) {
-      setIsModalError(true);
-    }
-  }, [isError, isErrorCreateNode, isErrorDeleteNode, isErrorRenameNode]);
 
   return (
     <main ref={mainRef}>
@@ -176,9 +154,9 @@ function App() {
           }}
           center
         >
-          <ModalChildren
+          <ModalModify
             callback={modalCallback}
-            mode={modeModale}
+            mode={mode}
             closeModal={() => onCloseModal}
           />
         </Modal>
@@ -193,22 +171,13 @@ function App() {
           }}
           center
         >
-          <h2>Error!</h2>
-
-          {error && (
-            <p>
-              {(error as CustomerError).data.data.message} Please try again.
-            </p>
-          )}
-          {mode === modeModaleEnum.CREATE && errorCreateNode && (
-            <p>{(errorCreateNode as CustomerError).data.data.message}</p>
-          )}
-          {mode === modeModaleEnum.DELETE && errorDeleteNode && (
-            <p>{(errorDeleteNode as CustomerError).data.data.message}</p>
-          )}
-          {mode === modeModaleEnum.RENAME && errorRenameNode && (
-            <p>{(errorRenameNode as CustomerError).data.data.message}</p>
-          )}
+          <ModalError
+            mode={mode}
+            error={error as CustomerError}
+            errorCreateNode={errorCreateNode as CustomerError}
+            errorDeleteNode={errorDeleteNode as CustomerError}
+            errorRenameNode={errorRenameNode as CustomerError}
+          />
         </Modal>
       }
     </main>

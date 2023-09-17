@@ -1,21 +1,17 @@
-import { modeModaleEnum } from "../../../types/types";
+import { modeModaleEnum } from "../../types/types";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
-import { setNewNodeName, setNodeName } from "../../../store/slices/nodeReducer";
-import { Button, ButtonSize } from "../button/Button";
-import styles from "./modalChildren.module.scss";
+import { RootState } from "../../store/store";
+import { setNewNodeName, setNodeName } from "../../store/slices/nodeReducer";
+import { Button, ButtonSize } from "../ui/button/Button";
+import styles from "./modalModify.module.scss";
 
-interface IModalChildren {
+interface IModalModify {
   mode: "delete" | "create" | "rename" | "default";
   callback: () => void;
   closeModal: () => void;
 }
 
-export const ModalChildren = ({
-  mode,
-  callback,
-  closeModal,
-}: IModalChildren) => {
+export const ModalModify = ({ mode, callback, closeModal }: IModalModify) => {
   const dispatch = useDispatch();
 
   const nodeNameState = useSelector(
@@ -52,7 +48,10 @@ export const ModalChildren = ({
       <div className={styles.content}>
         {mode !== modeModaleEnum.DELETE ? (
           <>
-            <label htmlFor="modal-input" className={newNodeNameState && styles.labelActive}>
+            <label
+              htmlFor="modal-input"
+              className={newNodeNameState && styles.labelActive}
+            >
               {mode === modeModaleEnum.CREATE ? " Name Node" : "New Node Name"}
             </label>
             <input
