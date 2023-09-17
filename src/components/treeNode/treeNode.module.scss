@@ -1,0 +1,48 @@
+.treeNode {
+  margin-left: 20px;
+  border-left: 1px dashed #aaa;
+  padding-left: 8px;
+  position: relative;
+  width: 100%;
+}
+
+.nodeContainer {
+  display: flex;
+  margin: 0;
+}
+
+.nodeToggle {
+  margin: 0.3rem;
+  display: flex;
+  align-items: center;
+  height: 1.3rem;
+  cursor:default;
+  transition: color 0.3s;
+}
+
+.childNodes {
+  margin: 0;
+  list-style: none;
+  padding-left: 8px;
+}
+
+.childNodes > li {
+  margin: 0;
+}
+
+.optionsContainer {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 1rem;
+}
+
+.iconBtn {
+  height: 1.3rem;
+  cursor: pointer;
+}
+
+.iconNode{
+  height: 1.3rem;
+  margin-right: 0.1rem;
+  cursor: pointer;
+}

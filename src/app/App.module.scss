@@ -1,0 +1,19 @@
+.linear {
+  position:fixed !important ; 
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.customModal {
+  max-width: 500px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.customModalError {
+    background-color: rgba( 250, 230, 230,1);
+    max-width: 500px;
+    width: 100%;
+    border-radius: 5px;
+  }
