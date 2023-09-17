@@ -29,9 +29,7 @@ const TreeNode = ({ node }: IProps) => {
   const expandedFolderId: string[] = useSelector(
     (state) => (state as RootState).expandedFolders
   );
-  const treeState = useSelector(
-    (state) => (state as RootState).tree
-  );
+  const treeState = useSelector((state) => (state as RootState).tree);
 
   const isExpandedNode = expandedFolderId.includes(node.id);
 
@@ -41,8 +39,7 @@ const TreeNode = ({ node }: IProps) => {
   const handleToggle = () => {
     if (!isExpanded) {
       dispatch(addExpandedFolder(node.id));
-    }
-    if (isExpanded) {
+    } else {
       dispatch(deleteExpandedFolder(node.id));
       const recursiveTraversalNode = (node: ITree[]) => {
         node.map((child) => {
@@ -60,12 +57,10 @@ const TreeNode = ({ node }: IProps) => {
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (!nodeRef.current) return;
-      if (!nodeRef.current.contains(e.target as Node)) {
-        setIsActive(false);
-      }
-      if (nodeRef.current.contains(e.target as Node)) {
+      if (nodeRef.current?.contains(e.target as Node)) {
         setIsActive(true);
+      } else {
+        setIsActive(false);
       }
     };
 
@@ -75,8 +70,6 @@ const TreeNode = ({ node }: IProps) => {
     };
   }, [isActive]);
 
-  useEffect(() => {}, [node]);
-
   const dispatch = useDispatch();
 
   const handleClick = (e: SyntheticEvent, mode: string) => {
@@ -85,16 +78,18 @@ const TreeNode = ({ node }: IProps) => {
     dispatch(setNodeId(node.id));
     dispatch(setNodeName(node.name));
 
-    if (mode === modeModaleEnum.CREATE) {
-      dispatch(setParentNodeId(node.id));
-      dispatch(setModeModale(modeModaleEnum.CREATE));
-      dispatch(setNodeName(""));
-    }
-    if (mode === modeModaleEnum.RENAME) {
-      dispatch(setModeModale(modeModaleEnum.RENAME));
-    }
-    if (mode === modeModaleEnum.DELETE) {
-      dispatch(setModeModale(modeModaleEnum.DELETE));
+    switch (mode) {
+      case modeModaleEnum.CREATE:
+        dispatch(setParentNodeId(node.id));
+        dispatch(setModeModale(modeModaleEnum.CREATE));
+        dispatch(setNodeName(""));
+        break;
+      case modeModaleEnum.RENAME:
+        dispatch(setModeModale(modeModaleEnum.RENAME));
+        break;
+      case modeModaleEnum.DELETE:
+        dispatch(setModeModale(modeModaleEnum.DELETE));
+        break;
     }
   };
 
@@ -116,43 +111,38 @@ const TreeNode = ({ node }: IProps) => {
         {isActive && (
           <div className={styles.optionsContainer}>
             <div
-              className={styles.optionsBtn}
               onClick={(e) => {
                 handleClick(e, modeModaleEnum.CREATE);
               }}
             >
               <img className={styles.iconBtn} src={addIcon} alt="icon add" />
             </div>
-            {
-              (+node.id !== +treeState.tree.id && (
-                <>
-                  <div
-                    className={styles.optionsBtn}
-                    onClick={(e) => {
-                      handleClick(e, modeModaleEnum.RENAME);
-                    }}
-                  >
-                    <img
-                      className={styles.iconBtn}
-                      src={editIcon}
-                      alt="icon edit"
-                    />
-                  </div>
-                  <div
-                    className={styles.optionsBtn}
-                    onClick={(e) => {
-                      handleClick(e, modeModaleEnum.DELETE);
-                    }}
-                  >
-                    <img
-                      className={styles.iconBtn}
-                      src={deleteIcon}
-                      alt="icon delete"
-                    />
-                  </div>
-                </>
-              ))
-            }
+            {+node.id !== +treeState.tree.id && (
+              <>
+                <div
+                  onClick={(e) => {
+                    handleClick(e, modeModaleEnum.RENAME);
+                  }}
+                >
+                  <img
+                    className={styles.iconBtn}
+                    src={editIcon}
+                    alt="icon edit"
+                  />
+                </div>
+                <div
+                  onClick={(e) => {
+                    handleClick(e, modeModaleEnum.DELETE);
+                  }}
+                >
+                  <img
+                    className={styles.iconBtn}
+                    src={deleteIcon}
+                    alt="icon delete"
+                  />
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>

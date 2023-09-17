@@ -55,8 +55,7 @@ function App() {
       });
 
     const onClick = (e: MouseEvent) => {
-      if (!mainRef.current) return;
-      if (!mainRef.current.contains(e.target as Node))
+      if (!mainRef.current?.contains(e.target as Node))
         e.stopImmediatePropagation();
     };
     document.addEventListener("click", onClick);
@@ -94,32 +93,34 @@ function App() {
   };
 
   const modalCallback = () => {
-    if (mode === modeModaleEnum.CREATE) {
-      createNode(currentNode)
-        .unwrap()
-        .then(() => getTree(treeName))
-        .catch((e) => {
-          setIsModalError(true);
-          console.log(e);
-        });
-    }
-    if (mode === modeModaleEnum.DELETE) {
-      deleteNode(currentNode)
-        .unwrap()
-        .then(() => getTree(treeName))
-        .catch((e) => {
-          setIsModalError(true);
-          console.log(e);
-        });
-    }
-    if (mode === modeModaleEnum.RENAME) {
-      renameNode(currentNode)
-        .unwrap()
-        .then(() => getTree(treeName))
-        .catch((e) => {
-          setIsModalError(true);
-          console.log(e);
-        });
+    switch (mode) {
+      case modeModaleEnum.CREATE:
+        createNode(currentNode)
+          .unwrap()
+          .then(() => getTree(treeName))
+          .catch((e) => {
+            setIsModalError(true);
+            console.log(e);
+          });
+        break;
+      case modeModaleEnum.DELETE:
+        deleteNode(currentNode)
+          .unwrap()
+          .then(() => getTree(treeName))
+          .catch((e) => {
+            setIsModalError(true);
+            console.log(e);
+          });
+        break;
+      case modeModaleEnum.RENAME:
+        renameNode(currentNode)
+          .unwrap()
+          .then(() => getTree(treeName))
+          .catch((e) => {
+            setIsModalError(true);
+            console.log(e);
+          });
+        break;
     }
     onCloseModal();
   };
